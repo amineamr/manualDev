@@ -23,9 +23,7 @@ export function ShopSelector({ shops, onSelectShop }: ShopSelectorProps) {
         brand: null,
     })
 
-    const brands = useMemo(() => Array.from(new Set(shops.map((s) => s.brand))), [shops])
-    const locations = useMemo(() => Array.from(new Set(shops.map((s) => s.location))), [shops])
-
+    // Filter shops based on active filters
     const filteredShops = useMemo(() => {
         return shops.filter((shop) => {
             return (
@@ -35,6 +33,17 @@ export function ShopSelector({ shops, onSelectShop }: ShopSelectorProps) {
         })
     }, [shops, activeFilters])
 
+    // Compute available locations and brands based on filtered shops
+    const availableLocations = useMemo(() => {
+        const locs = filteredShops.map((s) => s.location)
+        return Array.from(new Set(locs))
+    }, [filteredShops])
+
+    const availableBrands = useMemo(() => {
+        const brands = filteredShops.map((s) => s.brand)
+        return Array.from(new Set(brands))
+    }, [filteredShops])
+
     return (
         <div className="space-y-6">
             <div className="text-center">
@@ -42,9 +51,10 @@ export function ShopSelector({ shops, onSelectShop }: ShopSelectorProps) {
                 <p className="text-muted-foreground">Choisissez le magasin à auditer</p>
             </div>
 
-            {/* Filters */}
-            <div className="grid gap-4 md:grid-cols-2">
-                <div>
+            {/* Filters on the same line */}
+            <div className="flex flex-wrap gap-4">
+                {/* Location Filter */}
+                <div className="flex-1 min-w-[150px]">
                     <label className="text-sm font-medium mb-1 block">Lieu</label>
                     <Select
                         value={activeFilters.location ?? "all"}
@@ -57,7 +67,7 @@ export function ShopSelector({ shops, onSelectShop }: ShopSelectorProps) {
                         </SelectTrigger>
                         <SelectContent>
                             <SelectItem value="all">Tous</SelectItem>
-                            {locations.map((loc) => (
+                            {availableLocations.map((loc) => (
                                 <SelectItem key={loc} value={loc}>
                                     {loc}
                                 </SelectItem>
@@ -66,7 +76,8 @@ export function ShopSelector({ shops, onSelectShop }: ShopSelectorProps) {
                     </Select>
                 </div>
 
-                <div>
+                {/* Brand Filter */}
+                <div className="flex-1 min-w-[150px]">
                     <label className="text-sm font-medium mb-1 block">Marque</label>
                     <Select
                         value={activeFilters.brand ?? "all"}
@@ -79,7 +90,7 @@ export function ShopSelector({ shops, onSelectShop }: ShopSelectorProps) {
                         </SelectTrigger>
                         <SelectContent>
                             <SelectItem value="all">Toutes</SelectItem>
-                            {brands.map((brand) => (
+                            {availableBrands.map((brand) => (
                                 <SelectItem key={brand} value={brand}>
                                     {brand}
                                 </SelectItem>
@@ -87,6 +98,28 @@ export function ShopSelector({ shops, onSelectShop }: ShopSelectorProps) {
                         </SelectContent>
                     </Select>
                 </div>
+            </div>
+
+            {/* Active Filters Badges */}
+            <div className="flex flex-wrap gap-2">
+                {activeFilters.location && (
+                    <span
+                        className="inline-flex items-center gap-1 px-3 py-1 text-sm bg-blue-100 text-blue-800 rounded-full cursor-pointer hover:bg-blue-200 transition"
+                        onClick={() => setActiveFilters((prev) => ({ ...prev, location: null }))}
+                    >
+            {activeFilters.location}
+                        <span className="font-bold">&times;</span>
+          </span>
+                )}
+                {activeFilters.brand && (
+                    <span
+                        className="inline-flex items-center gap-1 px-3 py-1 text-sm bg-green-100 text-green-800 rounded-full cursor-pointer hover:bg-green-200 transition"
+                        onClick={() => setActiveFilters((prev) => ({ ...prev, brand: null }))}
+                    >
+            {activeFilters.brand}
+                        <span className="font-bold">&times;</span>
+          </span>
+                )}
             </div>
 
             {/* Shops list */}
