@@ -11,6 +11,7 @@ import { createClient } from "@/lib/supabase/client"
 import { useRouter } from "next/navigation"
 import { useToast } from "@/hooks/use-toast"
 import { ArrowLeft, Send, Save } from "lucide-react"
+import Link from "next/link";
 
 interface Shop {
   id: string
@@ -99,15 +100,14 @@ export function AssessmentForm({ shop, onBack }: AssessmentFormProps) {
   return (
     <div className="space-y-6">
       {/* Header */}
+        <div className="flex items-center space-x-2">
+            <Link href="/audit" className="flex items-center text-sm text-primary hover:underline">
+                <ArrowLeft className="w-4 h-4 mr-4" />
+                Retour
+            </Link>
+        </div>
       <div className="flex items-center gap-4 mb-6">
-        <Button
-          variant="ghost"
-          onClick={onBack}
-          className="text-muted-foreground hover:text-foreground"
-        >
-          <ArrowLeft className="h-4 w-4 mr-2" />
-          Retour
-        </Button>
+
         <div>
           <h1 className="text-2xl font-bold text-foreground">Audit : {shop.name}</h1>
           <p className="text-muted-foreground">
