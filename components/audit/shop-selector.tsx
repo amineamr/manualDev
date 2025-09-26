@@ -3,6 +3,8 @@
 import { useState, useMemo } from "react"
 import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { ArrowLeft } from "lucide-react"
+import Link from "next/link"
 
 interface Shop {
     id: string
@@ -46,9 +48,17 @@ export function ShopSelector({ shops, onSelectShop }: ShopSelectorProps) {
 
     return (
         <div className="space-y-6">
+            {/* Back link */}
+            <div className="flex items-center space-x-2">
+                <Link href="/dashboard" className="flex items-center text-sm text-primary hover:underline">
+                    <ArrowLeft className="w-4 h-4 mr-4" />
+                    Retour au dashboard
+                </Link>
+            </div>
+
+            {/* Page title */}
             <div className="text-center">
                 <h2 className="text-2xl font-bold text-foreground mb-2">Sélectionner un magasin</h2>
-                <p className="text-muted-foreground">Choisissez le magasin à auditer</p>
             </div>
 
             {/* Filters on the same line */}
